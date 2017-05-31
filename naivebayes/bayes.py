@@ -110,3 +110,17 @@ def testingNB():
     thisDoc = array(setOfWord2Vec(myVocabList, testEntry))
     print testEntry, 'classfied as:', classfyNB(thisDoc, p0V, p1V, pAb)
 
+
+def bagOfWords2Vec(vocabList, inputSet):
+    """
+    朴素贝叶斯词袋模型
+    与词集模型不同的是，每个词可能出现不止一次，每当遇到一个单词时，它会增加词向量中的对应值，而不只是将对应的数值设为1
+    :param vocabList:
+    :param inputSet:
+    :return:
+    """
+    returnVec = [0] * len(vocabList)
+    for word in inputSet:
+        if word in vocabList:
+            returnVec[vocabList.index(word)] += 1
+    return returnVec
