@@ -124,3 +124,54 @@ def bagOfWords2Vec(vocabList, inputSet):
         if word in vocabList:
             returnVec[vocabList.index(word)] += 1
     return returnVec
+
+
+def textParser(bigString):
+    """
+    文件解析
+    :param bigString:
+    :return:
+    """
+    import re
+    listOfTokens = re.split(r'\w*', bigString)  # 使用正则表达式，分隔符是除单词、数字外的任意字符串
+    return [token.lower() for token in listOfTokens if len(token) > 2]  # 全部变为小写，且单词长度大于2
+
+
+def spamTest():
+    """
+    垃圾邮件过滤测试
+    :return:
+    """
+    docList = []
+    classList = []
+    fullText = []
+    for i in range(26):
+        wordList = textParser(open('email/spam/%d.txt' % i).read())  # 导入解析文本文件(垃圾邮件)，假装本地有这些文件
+        docList.append(wordList)
+        fullText.extend(wordList)
+        classList.append(1)
+
+        wordList = textParser(open('email/ham/%d.txt' % i).read())  # 导入解析文本文件(非垃圾邮件)，假装本地有这些文件
+        docList.append(wordList)
+        fullText.extend(wordList)
+        classList.append(0)
+    vocabList = createVocabList(docList)
+    trainingSet = range(50)
+    testSet = []
+    for i in range(10):  # 随机构建训练集
+        randIndex = int(random.uniform(0, len(trainingSet)))
+        testSet.append(trainingSet[randIndex])
+        del (trainingSet[randIndex])
+    trainMat = []
+    trainClasses = []
+    for docIndex in trainingSet:
+        trainMat.append(setOfWord2Vec(vocabList, docList[docIndex]))
+        trainClasses.append(classList[docIndex])
+
+    p0V, p1V, pSpam = trainNB0(trainMat, trainClasses)
+    errorCount = 0
+    for docIndex in testSet:
+        wordVec = setOfWord2Vec(vocabList, docList[docIndex])
+        if classfyNB(wordVec,p0V,p1V,pSpam) != classList[docIndex]:
+            errorCount += 1
+    print 'error rate is :{0}'.format(float(errorCount)/len(testSet))
