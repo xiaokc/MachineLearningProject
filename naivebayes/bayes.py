@@ -137,9 +137,10 @@ def textParser(bigString):
     return [token.lower() for token in listOfTokens if len(token) > 2]  # 全部变为小写，且单词长度大于2
 
 
-def spamTest():
+def spamTest(numInterator):
     """
     垃圾邮件过滤测试
+    :param numInterator: 迭代次数
     :return:
     """
     docList = []
@@ -158,20 +159,26 @@ def spamTest():
     vocabList = createVocabList(docList)
     trainingSet = range(50)
     testSet = []
-    for i in range(10):  # 随机构建训练集
-        randIndex = int(random.uniform(0, len(trainingSet)))
-        testSet.append(trainingSet[randIndex])
-        del (trainingSet[randIndex])
-    trainMat = []
-    trainClasses = []
-    for docIndex in trainingSet:
-        trainMat.append(setOfWord2Vec(vocabList, docList[docIndex]))
-        trainClasses.append(classList[docIndex])
 
-    p0V, p1V, pSpam = trainNB0(trainMat, trainClasses)
-    errorCount = 0
-    for docIndex in testSet:
-        wordVec = setOfWord2Vec(vocabList, docList[docIndex])
-        if classfyNB(wordVec,p0V,p1V,pSpam) != classList[docIndex]:
-            errorCount += 1
-    print 'error rate is :{0}'.format(float(errorCount)/len(testSet))
+    allError = 0
+    for iteratorIndex in range(numInterator):  # 多次迭代，计算error rate的平均值
+        for i in range(10):  # 随机构建训练集
+            randIndex = int(random.uniform(0, len(trainingSet)))
+            testSet.append(trainingSet[randIndex])
+            del (trainingSet[randIndex])
+        trainMat = []
+        trainClasses = []
+        for docIndex in trainingSet:
+            trainMat.append(setOfWord2Vec(vocabList, docList[docIndex]))
+            trainClasses.append(classList[docIndex])
+
+        p0V, p1V, pSpam = trainNB0(trainMat, trainClasses)
+        errorCount = 0
+        for docIndex in testSet:
+            wordVec = setOfWord2Vec(vocabList, docList[docIndex])
+            if classfyNB(wordVec, p0V, p1V, pSpam) != classList[docIndex]:
+                errorCount += 1
+        print 'error rate is :{0}'.format(float(errorCount) / len(testSet))
+        allError += errorCount
+
+    print 'average error rate is:{0}'.format(float(allError) / numInterator)
