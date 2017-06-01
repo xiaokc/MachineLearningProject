@@ -96,6 +96,10 @@ def classfyNB(vec2Classify, p0Vec, p1Vec, pClass1):
 
 
 def testingNB():
+    """
+    过滤网站恶意留言
+    :return:
+    """
     listOPosts, listClasses = loadDataSet()
     myVocabList = createVocabList(listOPosts)
     trainMat = []
