@@ -4,4 +4,6 @@ import logRegress
 
 if __name__ == '__main__':
     dataMat, labelMat = logRegress.loadDataSet()
-    print logRegress.gradAscent(dataMat, labelMat)
+    weights = logRegress.gradAscent(dataMat, labelMat)
+    print weights
+    print logRegress.plotBestFit(weights.getA())
