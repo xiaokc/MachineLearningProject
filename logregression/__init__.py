@@ -1,9 +1,10 @@
 # coding=utf-8
 
 import logRegress
+from numpy import *
 
 if __name__ == '__main__':
     dataMat, labelMat = logRegress.loadDataSet()
-    weights = logRegress.gradAscent(dataMat, labelMat)
+    weights = logRegress.stocGradAscent1(array(dataMat), labelMat)
     print weights
-    print logRegress.plotBestFit(weights.getA())
+    print logRegress.plotBestFit(weights)
