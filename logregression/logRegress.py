@@ -49,6 +49,12 @@ def gradAscent(dataMatIn, classLabels):
 
 
 def stocGradAscent0(dataMatrix, classLabels):
+    """
+    随机梯度上升，学习率alpha固定大小
+    :param dataMatrix:
+    :param classLabels:
+    :return:
+    """
     m, n = shape(dataMatrix)
     alpha = 0.01
     weights = ones(n)
@@ -60,6 +66,14 @@ def stocGradAscent0(dataMatrix, classLabels):
 
 
 def stocGradAscent1(dataMatrix, classLabels, numIter=150):
+    """
+    控制迭代次数的随机梯度上升
+    迭代过程中动态修改学习率alpha的大小
+    :param dataMatrix:
+    :param classLabels:
+    :param numIter:
+    :return:
+    """
     m, n = shape(dataMatrix)
     weights = ones(n)
     for i in range(numIter):
